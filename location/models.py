@@ -80,7 +80,7 @@ class Location(core_models.VersionedModel, core_models.ExtendableModel):
     uuid = models.CharField(db_column='LocationUUID',
                             max_length=36, default=uuid.uuid4, unique=True)
     code = models.CharField(db_column='LocationCode',
-                            max_length=8, blank=True, null=True)
+                            max_length=20, blank=True, null=True)
     name = models.CharField(db_column='LocationName',
                             max_length=50, blank=True, null=True)
     parent = models.ForeignKey('Location', models.DO_NOTHING,
@@ -180,7 +180,7 @@ class HealthFacility(core_models.VersionedModel, core_models.ExtendableModel):
     uuid = models.CharField(
         db_column='HfUUID', max_length=36, default=uuid.uuid4, unique=True)
 
-    code = models.CharField(db_column='HFCode', max_length=8)
+    code = models.CharField(db_column='HFCode', max_length=20)
     name = models.CharField(db_column='HFName', max_length=100)
     acc_code = models.CharField(
         db_column='AccCode', max_length=25, blank=True, null=True)
@@ -300,20 +300,6 @@ class UserDistrict(core_models.VersionedModel):
                 UserDistrict.objects
                 .filter(*filter_validity())
                 .filter(location__type='D')
-            )
-        elif user.is_imis_admin:
-            # TODO: Use 'distinct()' when it is supported by MSSQL or if PostgreSQL becomes the sole database.
-            distinct_districts_codes = UserDistrict.objects.all().values_list('location__code')
-            usd_list = list(set(item[0] for item in distinct_districts_codes))
-            user_district_ids = []
-            for code in usd_list:
-                user_district = UserDistrict.objects.filter(location__code=code).first()
-                user_district_ids.append(user_district.id)
-            return (
-                UserDistrict.objects
-                .filter(*filter_validity())
-                .filter(location__type='D')
-                .filter(id__in=user_district_ids)
             )
         if not isinstance(user, core_models.InteractiveUser):
             if isinstance(user, core_models.TechnicalUser):
