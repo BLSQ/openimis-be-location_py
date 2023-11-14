@@ -2,6 +2,45 @@
 
 from django.db import migrations, models
 
+HF_VIEWS_TO_REMOVE = [
+    "uvwAmountApproved",
+    "uvwAmountClaimed",
+    "uvwAmountRejected",
+    "uvwAmountValuated",
+    "uvwClaimEntered",
+    "uvwClaimProcessed",
+    "uvwClaimSent",
+    "uvwClaimSubmitted",
+    "uvwClaimValuated",
+    "uvwHospitalAdmissions",
+    "uvwHospitalDays",
+    "uvwItemExpenditures",
+    "uvwItemUtilization",
+    "uvwNumberFeedbackAnswerYes",
+    "uvwNumberFeedbackResponded",
+    "uvwNumberFeedbackSent",
+    "uvwOverallAssessment",
+    "uvwServiceExpenditures",
+    "uvwServiceUtilization",
+    "uvwVisit",
+]
+
+LOCATION_VIEWS_TO_REPLACE = [
+    "tblRegions",
+    "tblDistricts",
+    "tblWards",
+    "tblVillages",
+]
+
+
+def delete_views():
+    sql_str = ''
+    for view in HF_VIEWS_TO_REMOVE:
+        sql_str += f'DROP VIEW IF EXISTS "{view}" CASCADE;\n'
+    for view in LOCATION_VIEWS_TO_REPLACE:
+        sql_str += f'DROP VIEW IF EXISTS "{view}" CASCADE;\n'
+    return sql_str
+
 
 class Migration(migrations.Migration):
 
@@ -10,6 +49,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(delete_views(), migrations.RunSQL.noop),
         migrations.AlterField(
             model_name='healthfacility',
             name='code',
