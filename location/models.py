@@ -73,6 +73,8 @@ class LocationManager(models.Manager):
         return self.filter(id__in=[x.id for x in children])
 
 
+LOCATION_CODE_LENGTH = 20
+
 class Location(core_models.VersionedModel, core_models.ExtendableModel):
     objects = LocationManager()
 
@@ -80,7 +82,7 @@ class Location(core_models.VersionedModel, core_models.ExtendableModel):
     uuid = models.CharField(db_column='LocationUUID',
                             max_length=36, default=uuid.uuid4, unique=True)
     code = models.CharField(db_column='LocationCode',
-                            max_length=20, blank=True, null=True)
+                            max_length=LOCATION_CODE_LENGTH, blank=True, null=True)
     name = models.CharField(db_column='LocationName',
                             max_length=50, blank=True, null=True)
     parent = models.ForeignKey('Location', models.DO_NOTHING,
@@ -175,12 +177,14 @@ class HealthFacilitySubLevel(models.Model):
         db_table = 'tblHFSublevel'
 
 
+HEALTH_FACILITY_CODE_LENGTH = 20
+
 class HealthFacility(core_models.VersionedModel, core_models.ExtendableModel):
     id = models.AutoField(db_column='HfID', primary_key=True)
     uuid = models.CharField(
         db_column='HfUUID', max_length=36, default=uuid.uuid4, unique=True)
 
-    code = models.CharField(db_column='HFCode', max_length=20)
+    code = models.CharField(db_column='HFCode', max_length=HEALTH_FACILITY_CODE_LENGTH)
     name = models.CharField(db_column='HFName', max_length=100)
     acc_code = models.CharField(
         db_column='AccCode', max_length=25, blank=True, null=True)
@@ -201,8 +205,7 @@ class HealthFacility(core_models.VersionedModel, core_models.ExtendableModel):
         db_column='Phone', max_length=50, blank=True, null=True)
     fax = models.CharField(
         db_column='Fax', max_length=50, blank=True, null=True)
-    email = models.CharField(
-        db_column='eMail', max_length=50, blank=True, null=True)
+    email = models.TextField(db_column='eMail', blank=True, null=True)
 
     care_type = models.CharField(db_column='HFCareType', max_length=1)
 
@@ -214,6 +217,8 @@ class HealthFacility(core_models.VersionedModel, core_models.ExtendableModel):
     offline = models.BooleanField(db_column='OffLine', default=False)
     # row_id = models.BinaryField(db_column='RowID', blank=True, null=True)
     audit_user_id = models.IntegerField(db_column='AuditUserID')
+    spimm_contract_start_date = models.DateField(db_column='SPIMMContractStartDate', blank=True, null=True)
+    spimm_contract_end_date = models.DateField(db_column='SPIMMContractEndDate', blank=True, null=True)
 
     def __str__(self):
         return self.code + " " + self.name
