@@ -2,7 +2,7 @@ import graphene
 from .apps import LocationConfig
 from core import assert_string_length, filter_validity
 from core.schema import OpenIMISMutation
-from .models import Location, HealthFacility, UserDistrict
+from .models import Location, HealthFacility, UserDistrict, HEALTH_FACILITY_CODE_LENGTH
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.utils.translation import gettext as _
@@ -210,7 +210,7 @@ class HealthFacilityCodeInputType(graphene.String):
 
     @staticmethod
     def coerce_string(value):
-        assert_string_length(value, 8)
+        assert_string_length(value, HEALTH_FACILITY_CODE_LENGTH)
         return value
 
     serialize = coerce_string
@@ -219,7 +219,7 @@ class HealthFacilityCodeInputType(graphene.String):
     @staticmethod
     def parse_literal(ast):
         result = graphene.String.parse_literal(ast)
-        assert_string_length(result, 8)
+        assert_string_length(result, HEALTH_FACILITY_CODE_LENGTH)
         return result
 
 

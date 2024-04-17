@@ -175,12 +175,15 @@ class HealthFacilitySubLevel(models.Model):
         db_table = 'tblHFSublevel'
 
 
+HEALTH_FACILITY_CODE_LENGTH = 50
+
+
 class HealthFacility(core_models.VersionedModel, core_models.ExtendableModel):
     id = models.AutoField(db_column='HfID', primary_key=True)
     uuid = models.CharField(
         db_column='HfUUID', max_length=36, default=uuid.uuid4, unique=True)
 
-    code = models.CharField(db_column='HFCode', max_length=8)
+    code = models.CharField(db_column='HFCode', max_length=HEALTH_FACILITY_CODE_LENGTH)
     name = models.CharField(db_column='HFName', max_length=100)
     acc_code = models.CharField(
         db_column='AccCode', max_length=25, blank=True, null=True)
