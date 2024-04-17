@@ -30,7 +30,7 @@ HF_VIEWS_TO_REMOVE = [
 def delete_views():
     sql_str = ''
     for view in HF_VIEWS_TO_REMOVE:
-        sql_str += f'DROP VIEW IF EXISTS "{view}" CASCADE;\n'
+        sql_str += f'DROP VIEW IF EXISTS "{view}";\n'
     return sql_str
 
 
